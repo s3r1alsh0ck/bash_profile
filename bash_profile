@@ -51,7 +51,7 @@ cat $1 | grep -Po "(\w+\.\w+\.\w+)$" | sort -u | tee -a $2 | wc -l
 }
 
 subloop(){
-for domain in $(cat $1); do sublist3r -d $domain  | sort -u | tee -a $2 | wc -l
+for domain in $(cat $1); do sublist3r -d $domain -o third-stage-domains.txt; cat third-stage-domains.txt |  sort -u >> final-subs.txt;done
 }
 
 alive(){
