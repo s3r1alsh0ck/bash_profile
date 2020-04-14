@@ -74,7 +74,8 @@ echo "1.sublist3r"
 echo "2.subfinder"
 echo "3.findimain"
 echo "4.certspotter"
-
+echo "5.All the above.[This takes lot of time!!!]"
+sleep 2
 echo "Select a script to loop!"
 read n
 
@@ -109,6 +110,18 @@ then
 bdomains.txt;done
  echo
  echo "Done with looping!"
+fi
+
+if [ $n == 5 ];
+then
+ echo "Looping with all the above scripts!!!"
+ for domain in $(cat $1); do python /root/tools/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
+ for domain in $(cat $1); do subfinder -d $domain -t 100 -o more.subdomains.txt;done
+ for domain in $(cat $1); do findomain -t $domain -u more.subdomains.txt;done
+ for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain | tee -a more.s
+ubdomains.txt;done
+ echo
+ echo "Done with looping!!!!!"
 fi
 }
 
