@@ -87,17 +87,17 @@ cat $1 | grep -Po "(\w+\.\w+\.\w+\.\w+)$" | sort -u | tee -a $2 | wc -l
 }
 
 formation(){
-cat http.txt | grep -e cloud >> cloud.domain.txt;
-cat http.txt | grep -e buy >> buy.domain.txt;
-cat http.txt | grep -e api >> api.domain.txt;
-cat http.txt | grep -e login >> login.domain.txt;
-cat http.txt | grep -e corp >> corp.domain.txt;
-cat http.txt | grep -e connect >> connect.domain.txt;
-cat http.txt | grep -e dev >> dev.domain.txt;
-cat http.txt | grep -e git >> git.domain.txt;
-cat http.txt | grep -e vpn >> vpn.domain.txt;
-cat http.txt | grep -e waf >> waf.domain.txt;
-cat http.txt | grep -e mail >> mail.domain.txt;
-cat http.txt | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.d
-omain.txt
+cat http.txt | grep -e cloud | awk -F "//" '{print $2}' >> cloud.domain.txt;
+cat http.txt | grep -e buy | awk -F "//" '{print $2}' >> buy.domain.txt;
+cat http.txt | grep -e api | awk -F "//" '{print $2}' >> api.domain.txt;
+cat http.txt | grep -e login | awk -F "//" '{print $2}' >> login.domain.txt;
+cat http.txt | grep -e corp | awk -F "//" '{print $2}' >> corp.domain.txt;
+cat http.txt | grep -e connect | awk -F "//" '{print $2}' >> connect.domain.txt;
+cat http.txt | grep -e dev | awk -F "//" '{print $2}' >> dev.domain.txt;
+cat http.txt | grep -e git | awk -F "//" '{print $2}' >> git.domain.txt;
+cat http.txt | grep -e vpn | awk -F "//" '{print $2}' >> vpn.domain.txt;
+cat http.txt | grep -e waf | awk -F "//" '{print $2}' >> waf.domain.txt;
+cat http.txt | grep -e mail | awk -F "//" '{print $2}' >> mail.domain.txt;
+cat http.txt | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | awk -F "//" '{print $2}' >> rest.domain.txt
+}
 }
