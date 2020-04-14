@@ -112,19 +112,34 @@ bdomains.txt;done
 fi
 }
 
-formation(){
-cat $1 | grep -e cloud | awk -F "//" '{print $2}' >> cloud.domain.txt;
-cat $1 | grep -e buy | awk -F "//" '{print $2}' >> buy.domain.txt;
-cat $1 | grep -e api | awk -F "//" '{print $2}' >> api.domain.txt;
-cat $1 | grep -e login | awk -F "//" '{print $2}' >> login.domain.txt;
-cat $1 | grep -e corp | awk -F "//" '{print $2}' >> corp.domain.txt;
-cat $1 | grep -e connect | awk -F "//" '{print $2}' >> connect.domain.txt;
-cat $1 | grep -e dev | awk -F "//" '{print $2}' >> dev.domain.txt;
-cat $1 | grep -e git | awk -F "//" '{print $2}' >> git.domain.txt;
-cat $1 | grep -e vpn | awk -F "//" '{print $2}' >> vpn.domain.txt;
-cat $1 | grep -e waf | awk -F "//" '{print $2}' >> waf.domain.txt;
-cat $1 | grep -e mail | awk -F "//" '{print $2}' >> mail.domain.txt;
+httpclass(){
+cat $1 | grep -e cloud | sort -u | awk -F "//" '{print $2}' >> cloud.domain.txt;
+cat $1 | grep -e buy | sort -u | awk -F "//" '{print $2}' >> buy.domain.txt;
+cat $1 | grep -e api | sort -u | awk -F "//" '{print $2}' >> api.domain.txt;
+cat $1 | grep -e login | sort -u | awk -F "//" '{print $2}' >> login.domain.txt;
+cat $1 | grep -e corp | sort -u | awk -F "//" '{print $2}' >> corp.domain.txt;
+cat $1 | grep -e connect | sort -u | awk -F "//" '{print $2}' >> connect.domain.txt;
+cat $1 | grep -e dev | sort -u | awk -F "//" '{print $2}' >> dev.domain.txt;
+cat $1 | grep -e git | sort -u | awk -F "//" '{print $2}' >> git.domain.txt;
+cat $1 | grep -e vpn | sort -u | awk -F "//" '{print $2}' >> vpn.domain.txt;
+cat $1 | grep -e waf | sort -u | awk -F "//" '{print $2}' >> waf.domain.txt;
+cat $1 | grep -e mail | sort -u | awk -F "//" '{print $2}' >> mail.domain.txt;
 cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | awk -F "//" '{print $2}' >> rest.domain.txt
+}
+
+subclass(){
+cat $1 | grep -e cloud >> cloud.domain.txt;
+cat $1 | grep -e buy >> buy.domain.txt;
+cat $1 | grep -e api >> api.domain.txt;
+cat $1 | grep -e login >> login.domain.txt;
+cat $1 | grep -e corp >> corp.domain.txt;
+cat $1 | grep -e connect >> connect.domain.txt;
+cat $1 | grep -e dev >> dev.domain.txt;
+cat $1 | grep -e git >> git.domain.txt;
+cat $1 | grep -e vpn >> vpn.domain.txt;
+cat $1 | grep -e waf >> waf.domain.txt;
+cat $1 | grep -e mail >> mail.domain.txt;
+cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.domain.txt
 }
 
 domainenum(){
