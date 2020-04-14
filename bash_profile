@@ -59,7 +59,7 @@ cat $1 | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ":4
 }
 
 ep(){
-cat $1 | sort -u | httprobe -s -p https:443 | tr -d ":443" | tee -a http.probe.txt
+cat $1 | sort -u | httprobe -s -p https:443 | tr -d ":443" | tee -a http.txt
 }
 
 eye(){
@@ -84,4 +84,20 @@ for domain in $(cat $1); do sublist3r -d $domain -o fourth-stage-domains.txt; ca
 
 sub4(){
 cat $1 | grep -Po "(\w+\.\w+\.\w+\.\w+)$" | sort -u | tee -a $2 | wc -l
+}
+
+formation(){
+cat http.txt | grep -e cloud >> cloud.domain.txt;
+cat http.txt | grep -e buy >> buy.domain.txt;
+cat http.txt | grep -e api >> api.domain.txt;
+cat http.txt | grep -e login >> login.domain.txt;
+cat http.txt | grep -e corp >> corp.domain.txt;
+cat http.txt | grep -e connect >> connect.domain.txt;
+cat http.txt | grep -e dev >> dev.domain.txt;
+cat http.txt | grep -e git >> git.domain.txt;
+cat http.txt | grep -e vpn >> vpn.domain.txt;
+cat http.txt | grep -e waf >> waf.domain.txt;
+cat http.txt | grep -e mail >> mail.domain.txt;
+cat http.txt | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.d
+omain.txt
 }
