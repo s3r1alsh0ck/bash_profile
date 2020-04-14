@@ -124,7 +124,7 @@ cat $1 | grep -e git | sort -u | awk -F "//" '{print $2}' >> git.domain.txt;
 cat $1 | grep -e vpn | sort -u | awk -F "//" '{print $2}' >> vpn.domain.txt;
 cat $1 | grep -e waf | sort -u | awk -F "//" '{print $2}' >> waf.domain.txt;
 cat $1 | grep -e mail | sort -u | awk -F "//" '{print $2}' >> mail.domain.txt;
-cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | awk -F "//" '{print $2}' >> rest.domain.txt
+cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | sort -u | awk -F "//" '{print $2}' >> rest.domain.txt
 }
 
 subclass(){
