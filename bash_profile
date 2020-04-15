@@ -69,20 +69,47 @@ eye(){
 ./../../../tools/EyeWitness/Python/EyeWitness.py -f $1 --prepend-https --web
 }
 
-loopdomain(){
-echo "1.sublist3r"
-echo "2.subfinder"
-echo "3.findimain"
-echo "4.certspotter"
-echo "5.All the above.[This takes lot of time!!!]"
-sleep 2
-echo "Select a script to loop!"
+subfuzz(){
+echo "Hey there"
+echo "Input type: "
+echo "1.Domain [Ex: domain.com]"
+echo "2.File [Ex: domains_list.txt]"
 read n
 
 if [ $n == 1 ];
 then
+ echo "Staring subdomain enumeration"
+ echo
+ findomain -t $1 -u sub.txt
+ echo
+ curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 | tee -a sub.txt
+ echo
+ subfinder -d $1 -o sub.txt
+ echo
+ python /root/Sublist3r/sublist3r.py -d $1 -o sub.txt
+ echo
+ cat sub.txt | sort -u | sed 's/<.*//' > subdomains.txt
+ echo
+ rm sub.txt
+ echo "Output file is saved in /root/subdomains.txt and the file count is: "
+ cat subdomains.txt | wc -l
+fi
+
+if [ $n == 2 ];
+then
+ echo "1.sublist3r"
+ echo "2.subfinder"
+ echo "3.findimain"
+ echo "4.certspotter"
+ echo "5.All the above.[This takes lot of time!!!]"
+ sleep 2
+ echo "Select a script to loop!"
+ read n
+
+if [ $n == 1 ];
+then
  echo "Looping with sublist3r!"
- for domain in $(cat $1); do python /root/tools/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
+ for domain in $(cat $1); do python /root/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
  echo
  echo "Done with looping!"
 fi
@@ -106,8 +133,8 @@ fi
 if [ $n == 4 ];
 then
  echo "Looping with certspotter!"
- for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain | tee -a more.su
-bdomains.txt;done
+ for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $d
+omain | tee -a more.subdomains.txt;done
  echo
  echo "Done with looping!"
 fi
@@ -118,59 +145,57 @@ then
  for domain in $(cat $1); do python /root/tools/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
  for domain in $(cat $1); do subfinder -d $domain -t 100 -o more.subdomains.txt;done
  for domain in $(cat $1); do findomain -t $domain -u more.subdomains.txt;done
- for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain | tee -a more.s
-ubdomains.txt;done
+ for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $d
+omain | tee -a more.subdomains.txt;done
  echo
  echo "Done with looping!!!!!"
 fi
+fi
+echo "Output is saved in /root/"
 }
 
-httpclass(){
-cat $1 | grep -e cloud | sort -u | awk -F "//" '{print $2}' >> cloud.domain.txt;
-cat $1 | grep -e buy | sort -u | awk -F "//" '{print $2}' >> buy.domain.txt;
-cat $1 | grep -e api | sort -u | awk -F "//" '{print $2}' >> api.domain.txt;
-cat $1 | grep -e login | sort -u | awk -F "//" '{print $2}' >> login.domain.txt;
-cat $1 | grep -e corp | sort -u | awk -F "//" '{print $2}' >> corp.domain.txt;
-cat $1 | grep -e connect | sort -u | awk -F "//" '{print $2}' >> connect.domain.txt;
-cat $1 | grep -e dev | sort -u | awk -F "//" '{print $2}' >> dev.domain.txt;
-cat $1 | grep -e git | sort -u | awk -F "//" '{print $2}' >> git.domain.txt;
-cat $1 | grep -e vpn | sort -u | awk -F "//" '{print $2}' >> vpn.domain.txt;
-cat $1 | grep -e waf | sort -u | awk -F "//" '{print $2}' >> waf.domain.txt;
-cat $1 | grep -e mail | sort -u | awk -F "//" '{print $2}' >> mail.domain.txt;
-cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | sort -u | awk -F "//" '{print $2}' >> rest.domain.txt
+classify(){
+echo "classification process: "
+echo "1.classify domains by subdomains output!!"
+echo "2.clssify domains by httprobe output!!"
+read n
+
+if [ $n == 1 ];
+then
+ cat $1 | grep -e cloud >> cloud.domain.txt;
+ cat $1 | grep -e buy >> buy.domain.txt;
+ cat $1 | grep -e api >> api.domain.txt;
+ cat $1 | grep -e login >> login.domain.txt;
+ cat $1 | grep -e corp >> corp.domain.txt;
+ cat $1 | grep -e connect >> connect.domain.txt;
+ cat $1 | grep -e dev >> dev.domain.txt;
+ cat $1 | grep -e git >> git.domain.txt;
+ cat $1 | grep -e vpn >> vpn.domain.txt;
+ cat $1 | grep -e waf >> waf.domain.txt;
+ cat $1 | grep -e mail >> mail.domain.txt;
+ cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.domain.txt
+echo "done"
+fi
+
+if [ $n == 2 ];
+then
+ cat $1 | grep -e cloud | sort -u | awk -F "//" '{print $2}' >> cloud.domain.txt;
+ cat $1 | grep -e buy | sort -u | awk -F "//" '{print $2}' >> buy.domain.txt;
+ cat $1 | grep -e api | sort -u | awk -F "//" '{print $2}' >> api.domain.txt;
+ cat $1 | grep -e login | sort -u | awk -F "//" '{print $2}' >> login.domain.txt;
+ cat $1 | grep -e corp | sort -u | awk -F "//" '{print $2}' >> corp.domain.txt;
+ cat $1 | grep -e connect | sort -u | awk -F "//" '{print $2}' >> connect.domain.txt;
+ cat $1 | grep -e dev | sort -u | awk -F "//" '{print $2}' >> dev.domain.txt;
+ cat $1 | grep -e git | sort -u | awk -F "//" '{print $2}' >> git.domain.txt;
+ cat $1 | grep -e vpn | sort -u | awk -F "//" '{print $2}' >> vpn.domain.txt;
+ cat $1 | grep -e waf | sort -u | awk -F "//" '{print $2}' >> waf.domain.txt;
+ cat $1 | grep -e mail | sort -u | awk -F "//" '{print $2}' >> mail.domain.txt;
+ cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail | sort -u | awk -F "//" '{print $2}' >> rest.domain.txt
+ echo "Done"
+fi
 }
 
-subclass(){
-cat $1 | grep -e cloud >> cloud.domain.txt;
-cat $1 | grep -e buy >> buy.domain.txt;
-cat $1 | grep -e api >> api.domain.txt;
-cat $1 | grep -e login >> login.domain.txt;
-cat $1 | grep -e corp >> corp.domain.txt;
-cat $1 | grep -e connect >> connect.domain.txt;
-cat $1 | grep -e dev >> dev.domain.txt;
-cat $1 | grep -e git >> git.domain.txt;
-cat $1 | grep -e vpn >> vpn.domain.txt;
-cat $1 | grep -e waf >> waf.domain.txt;
-cat $1 | grep -e mail >> mail.domain.txt;
-cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.domain.txt
-}
 
-domainenum(){
-echo "Staring subdomain enumeration"
-echo
-findomain -t $1 -u sub.txt
-echo
-curl -s https://certspotter.com/api/v0/certs\?domain\=$1 | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $1 | tee -a sub.txt
-echo
-subfinder -d $1 -o sub.txt
-echo
-python /root/tools/Sublist3r/sublist3r.py -d $1 -o sub.txt
-echo
-cat sub.txt | sort -u | sed 's/<.*//' > subdomains.txt
-echo
-rm sub.txt
-cat subdomains.txt | wc -l
-}
 fuzzer(){
 if ! [ -x "$(command -v gobuster)" ]; then
     echo "installing gobuster"
