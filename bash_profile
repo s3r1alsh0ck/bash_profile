@@ -133,8 +133,7 @@ fi
 if [ $n == 4 ];
 then
  echo "Looping with certspotter!"
- for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $d
-omain | tee -a more.subdomains.txt;done
+ for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain | tee -a more.subdomains.txt;done
  echo
  echo "Done with looping!"
 fi
@@ -145,8 +144,7 @@ then
  for domain in $(cat $1); do python /root/tools/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
  for domain in $(cat $1); do subfinder -d $domain -t 100 -o more.subdomains.txt;done
  for domain in $(cat $1); do findomain -t $domain -u more.subdomains.txt;done
- for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $d
-omain | tee -a more.subdomains.txt;done
+ for domain in $(cat $1); do curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain | tee -a more.subdomains.txt;done
  echo
  echo "Done with looping!!!!!"
 fi
@@ -174,7 +172,7 @@ then
  cat $1 | grep -e waf >> waf.domain.txt;
  cat $1 | grep -e mail >> mail.domain.txt;
  cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.domain.txt
-echo "done"
+ echo "done"
 fi
 
 if [ $n == 2 ];
@@ -364,10 +362,8 @@ if [ $n == 14 ];
 then
  echo "Fuzzing with all wordlist!!"
  for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/common.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
- for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-medium-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;d
-one
- for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-large-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;do
-ne
+ for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-medium-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
+ for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-large-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
  for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-medium-files.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
  for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-large-files.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
  for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/api/api-seen-in-wild.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
