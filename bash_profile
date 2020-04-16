@@ -13,6 +13,10 @@ fuzz(){
 gobuster dir -u $1 -w $2 --wildcard | grep -e "Status: 200"
 }
 
+hijack(){
+subjack -w $1 -t 50 -v -a -o subjack.txt
+}
+
 port(){
 nmap -iL $1 -T5 -oA $2
 }
