@@ -5,16 +5,34 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
+dns(){
+python /root/tools/dnscan/dnscan.py -d $1
+}
+
+get(){
+echo $1 | gau | grep -v -e jpg -e png -e gif -e woff -e woff2 -e ttf -e svg -e jpeg -e css -e ico -e eot | sort -u | tee -a gau.$1.txt
+}
+
 ipinfo(){
 curl http://ipinfo.io/$1 | tee -a $2
+}
+rshell(){
+nc -l -n -vv -p 443 -k
+}
+hijack(){
+subjack -w $1 -t 50 -v -a -o subjack.txt
+}
+
+hjc(){
+subzy -target $1
+}
+
+way(){
+echo $1 | waybackurls | grep -v -e jpg -e png -e gif -e woff -e woff2 -e ttf -e svg -e jpeg -e css -e ico -e eot | sort -u | tee -a wayback.$1.txt
 }
 
 fuzz(){
 gobuster dir -u $1 -w $2 --wildcard | grep -e "Status: 200"
-}
-
-hijack(){
-subjack -w $1 -t 50 -v -a -o subjack.txt
 }
 
 port(){
@@ -90,7 +108,7 @@ then
  echo
  subfinder -d $1 -o sub.txt
  echo
- python /root/Sublist3r/sublist3r.py -d $1 -o sub.txt
+ python /root/tools/Sublist3r/sublist3r.py -d $1 -o sub.txt
  echo
  cat sub.txt | sort -u | sed 's/<.*//' > subdomains.txt
  echo
@@ -113,7 +131,7 @@ then
 if [ $n == 1 ];
 then
  echo "Looping with sublist3r!"
- for domain in $(cat $1); do python /root/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
+ for domain in $(cat $1); do python /root/tools/Sublist3r/sublist3r.py -d $domain -o more.subdomains.txt;done
  echo
  echo "Done with looping!"
 fi
@@ -176,7 +194,7 @@ then
  cat $1 | grep -e waf >> waf.domain.txt;
  cat $1 | grep -e mail >> mail.domain.txt;
  cat $1 | grep -v -e cloud -e buy -e api -e login -e corp -e connect -e dev -e git -e vpn -e waf -e mail >> rest.domain.txt
- echo "done"
+echo "done"
 fi
 
 if [ $n == 2 ];
@@ -267,8 +285,7 @@ fi
 if [ $n == 2 ];
 then
  echo "Fuzzing with medium wordlist!!"
- for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-medium-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;d
-one
+ for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-medium-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
  echo
  echo "Done with fuzzing"
 fi
@@ -276,8 +293,7 @@ fi
 if [ $n == 3 ];
 then
  echo "Fuzzing with large wordlist!!"
- for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-large-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;do
-ne
+ for domain in $(cat $1); do gobuster dir -u $domain -w /root/SecLists/Discovery/Web-Content/raft-large-directories.txt --wildcard | grep -e "Status: 200" >> $1.txt;done
  echo
  echo "Done with fuzzing!!"
 fi
