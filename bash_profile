@@ -9,6 +9,10 @@ dns(){
 python /root/tools/dnscan/dnscan.py -d $1
 }
 
+hx(){
+httpx -follow-redirects -status-code -title
+}
+
 get(){
 echo $1 | gau | grep -v -e jpg -e png -e gif -e woff -e woff2 -e ttf -e svg -e jpeg -e css -e ico -e eot | sort -u | tee -a gau.$1.txt
 }
