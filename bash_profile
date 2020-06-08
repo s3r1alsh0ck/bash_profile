@@ -9,6 +9,30 @@ dns(){
 python /root/tools/dnscan/dnscan.py -d $1
 }
 
+tprocess(){
+mkdir gowitness
+mkdir s3scanner
+mkdir subdomains
+mkdir photon
+mkdir gitgrabber
+mkdir ffuf
+mkdir meg
+mkdir paramspider
+mkdir wayback
+}
+
+ps(){
+python3 /root/tools/ParamSpider/paramspider.py --domain $1
+}
+
+s3find(){
+python3 /root/tools/S3Scanner/s3scanner.py $1
+}
+
+clean(){
+reset && clear
+}
+
 hx(){
 httpx -follow-redirects -status-code -title
 }
